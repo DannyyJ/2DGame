@@ -14,6 +14,8 @@ public class MovementScript : MonoBehaviour
     private int extraJumps = 1;
     private bool isPunching = false;
     private bool isKicking = false;
+    private bool isCrouchKicking = false;
+    private bool isFlyingKicking = false;
 
     enum MovementState { Idle, Walk, Jump, Fall, Crouch, Punch, Kick, Crouch_Kick, Flying_Kick, Hurt }
     MovementState state = MovementState.Idle;
@@ -50,6 +52,18 @@ public class MovementScript : MonoBehaviour
         {
             StartCoroutine(PunchRoutine());
         }
+        if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && IsGrounded() && !isCrouchKicking)
+        {
+            StartCoroutine(CrouchKickRoutin());
+        }
+        else if (Input.GetKeyDown(KeyCode.R) && IsGrounded() && !isKicking)
+        {
+            StartCoroutine(KickRoutine());
+        }
+        else if (Input.GetKeyDown(KeyCode.R) && !IsGrounded() && !isFlyingKicking)
+        {
+            StartCoroutine(FlyingKickRoutine());
+        }
     }
 
     private void Move()
@@ -63,7 +77,7 @@ public class MovementScript : MonoBehaviour
         isPunching = true;
         state = MovementState.Punch;
         anim.SetInteger("State", (int)state);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.45f);
         isPunching = false;
     }
 
@@ -72,30 +86,47 @@ public class MovementScript : MonoBehaviour
         isKicking = true;
         state = MovementState.Kick;
         anim.SetInteger("State", (int)state);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.7f);
         isKicking = false;
+    }
+    IEnumerator CrouchKickRoutin()
+    {
+        isCrouchKicking = true;
+        state = MovementState.Crouch_Kick;
+        anim.SetInteger("State", (int)state);
+        yield return new WaitForSeconds(0.85f);
+        isCrouchKicking = false;
+    }
+
+    IEnumerator FlyingKickRoutine()
+    {
+        isFlyingKicking = true;
+        state = MovementState.Flying_Kick;
+        anim.SetInteger("State", (int)state);
+        yield return null;
     }
 
     void UpdateAnimationState()
     {
+        if (isFlyingKicking && IsGrounded())
+        {
+            isFlyingKicking = false;
+        }
+
         if (isPunching) return;
 
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.R))
-        {
-            state = MovementState.Crouch_Kick;
-        }
+        if (isKicking) return;
+
+        if (isCrouchKicking) return;
+
         else if (Input.GetKey(KeyCode.LeftControl))
         {
             state = MovementState.Crouch;
         }
-        else if (Input.GetKey(KeyCode.R) && !IsGrounded())
-        {
-            state = MovementState.Flying_Kick;
-        }
-        else if (Input.GetKey(KeyCode.R))
-        {
-            state = MovementState.Kick;
-        }
+        //else if (Input.GetKey(KeyCode.R) && !IsGrounded())
+        //{
+        //    state = MovementState.Flying_Kick;
+        //}
         else if (rb.velocity.y > 0.1f)
         {
             state = MovementState.Jump;
