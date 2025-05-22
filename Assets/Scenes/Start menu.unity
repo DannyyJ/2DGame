@@ -2146,6 +2146,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &405303591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 405303593}
+  - component: {fileID: 405303594}
+  m_Layer: 0
+  m_Name: Buttonscript
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &405303593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405303591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 923.6876, y: 368.78638, z: 6.3242397}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &405303594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405303591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7a264bb1ef89249b90c064243e7e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  restartButton: {fileID: 0}
+  menuButton: {fileID: 0}
+  easyButton: {fileID: 2062191976}
+  mediumButton: {fileID: 1083861002}
+  hardButton: {fileID: 721091783}
 --- !u!1 &511115028
 GameObject:
   m_ObjectHideFlags: 0
@@ -9982,10 +10031,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1255584258}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SetDifficultyAndStartGame
-        m_Mode: 3
+      - m_Target: {fileID: 405303594}
+        m_TargetAssemblyTypeName: SceneButtonHandler, Assembly-CSharp
+        m_MethodName: StartHard
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10115,10 +10164,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1255584258}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SetDifficultyAndStartGame
-        m_Mode: 3
+      - m_Target: {fileID: 405303594}
+        m_TargetAssemblyTypeName: SceneButtonHandler, Assembly-CSharp
+        m_MethodName: StartMedium
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10165,7 +10214,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1083861000}
   m_CullTransparentMesh: 1
---- !u!1 &1255584257
+--- !u!1 &1515965159
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10173,38 +10222,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1255584259}
-  - component: {fileID: 1255584258}
+  - component: {fileID: 1515965161}
+  - component: {fileID: 1515965160}
   m_Layer: 0
-  m_Name: IDK
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1255584258
+--- !u!114 &1515965160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255584257}
+  m_GameObject: {fileID: 1515965159}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cca9cc6228997f145a2f6d65a6dd7b67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentDifficulty: 0
---- !u!4 &1255584259
+--- !u!4 &1515965161
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255584257}
+  m_GameObject: {fileID: 1515965159}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 888.09766, y: 681.0264, z: -1.3481135}
+  m_LocalPosition: {x: 923.6876, y: 368.78638, z: 6.3242397}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10427,10 +10476,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1255584258}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SetDifficultyAndStartGame
-        m_Mode: 3
+      - m_Target: {fileID: 405303594}
+        m_TargetAssemblyTypeName: SceneButtonHandler, Assembly-CSharp
+        m_MethodName: StartEasy
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10619,4 +10668,5 @@ SceneRoots:
   - {fileID: 255195360}
   - {fileID: 511115032}
   - {fileID: 671969594}
-  - {fileID: 1255584259}
+  - {fileID: 405303593}
+  - {fileID: 1515965161}

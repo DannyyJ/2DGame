@@ -10,6 +10,8 @@ public class PlayerAttackHitbox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("Hitbox kolliderade med: " + collision.name);
+
         if (collision.CompareTag(enemyTag))
         {
             EnemyHealth enemy = collision.GetComponent<EnemyHealth>();
@@ -17,6 +19,7 @@ public class PlayerAttackHitbox : MonoBehaviour
             {
                 Vector2 knockbackDir = (collision.transform.position - transform.root.position).normalized;
                 enemy.TakeDamage(damage, knockbackDir);
+                Debug.Log("Player hit enemy: " + collision.name);
             }
         }
     }

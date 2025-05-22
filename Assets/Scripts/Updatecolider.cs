@@ -15,7 +15,6 @@ public class Updatecolider : MonoBehaviour
 
     void LateUpdate()
     {
-        // Uppdaterar collidern baserat på den aktuella sprite-formen
         if (spriteRenderer.sprite != null)
         {
             polygonCollider.pathCount = spriteRenderer.sprite.GetPhysicsShapeCount();

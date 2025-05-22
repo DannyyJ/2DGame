@@ -177,4 +177,22 @@ public class MovementScript : MonoBehaviour
         float extraHeight = 0.8f;
         return Physics2D.BoxCast(boxcol.bounds.center, boxcol.bounds.size, 0f, Vector2.down, extraHeight, groundLayer);
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isAttacking && collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
+            if (enemy != null)
+            {
+                Vector2 knockbackDir = (collision.transform.position - transform.position).normalized;
+                enemy.TakeDamage(1, knockbackDir);
+                Debug.Log("Player attack träffade fienden: " + collision.gameObject.name);
+            }
+        }
+        else if (!isAttacking && collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Spelaren kolliderade med fienden utan att attackera.");
+        }
+    }
 }

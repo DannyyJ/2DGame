@@ -1,10 +1,13 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyHealth : MonoBehaviour
 {
     public int health;
     public int damage;
-    public float knockbackForce = 7f; // Justerbar knockback
+    public float knockbackForce = 7f;
 
     private Rigidbody2D rb;
 
@@ -12,7 +15,6 @@ public class EnemyHealth : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Sätt hälsa och skada beroende på svårighetsgrad
         if (GameManager.Instance != null)
         {
             switch (GameManager.Instance.currentDifficulty)
@@ -37,19 +39,38 @@ public class EnemyHealth : MonoBehaviour
             damage = 1;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            MovementScript player = collision.gameObject.GetComponent<MovementScript>();
+            if (player != null && !player.isAttacking)
+            {
+                PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    Vector2 knockbackDir = (collision.transform.position - transform.position).normalized;
+                    playerHealth.TakeDamage(damage, knockbackDir);
+                    Debug.Log("Enemy damaged player!");
+
+                    // Knockback på spelaren hanteras i PlayerHealth nu
+                }
+            }
+        }
+    }
+
     public void TakeDamage(int amount, Vector2 knockbackDir)
     {
         health -= amount;
-        Debug.Log("Enemy took damage! Health: " + health);
+        Debug.Log("Enemy took damage! Remaining health: " + health);
 
-        // Knockback-effekt
         if (rb != null)
         {
-            rb.velocity = Vector2.zero; // Nollställ först för att undvika "stackad" kraft
+            rb.velocity = Vector2.zero;
             rb.AddForce(knockbackDir.normalized * knockbackForce, ForceMode2D.Impulse);
         }
 
-        // Döda om hp <= 0
         if (health <= 0)
         {
             Die();
@@ -59,7 +80,6 @@ public class EnemyHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("Enemy defeated!");
-        Destroy(gameObject);
-        // Här kan du t.ex. kalla på GameManager.Instance.GameWon() eller liknande
+        SceneManager.LoadScene(3);
     }
 }
