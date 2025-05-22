@@ -5,17 +5,22 @@ using UnityEngine;
 public class MovementScript : MonoBehaviour
 {
     private Rigidbody2D rb;
-    Animator anim;
-    SpriteRenderer sprite;
+    private Animator anim;
+    private SpriteRenderer sprite;
+    private BoxCollider2D boxcol;
+
     [SerializeField] private int moveSpeed = 5;
-    BoxCollider2D boxcol;
-    [SerializeField] LayerMask groundLayer;
+    [SerializeField] private LayerMask groundLayer;
+
     private int maxJumps = 1;
     private int extraJumps = 1;
+
     private bool isPunching = false;
     private bool isKicking = false;
     private bool isCrouchKicking = false;
     private bool isFlyingKicking = false;
+
+    public bool isAttacking = false;
 
     enum MovementState { Idle, Walk, Jump, Fall, Crouch, Punch, Kick, Crouch_Kick, Flying_Kick, Hurt }
     MovementState state = MovementState.Idle;
@@ -54,7 +59,7 @@ public class MovementScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftControl) && IsGrounded() && !isCrouchKicking)
         {
-            StartCoroutine(CrouchKickRoutin());
+            StartCoroutine(CrouchKickRoutine());
         }
         else if (Input.GetKeyDown(KeyCode.R) && IsGrounded() && !isKicking)
         {
@@ -75,58 +80,68 @@ public class MovementScript : MonoBehaviour
     IEnumerator PunchRoutine()
     {
         isPunching = true;
+        isAttacking = true;
+
         state = MovementState.Punch;
         anim.SetInteger("State", (int)state);
+
         yield return new WaitForSeconds(0.45f);
+
         isPunching = false;
+        isAttacking = false;
     }
 
     IEnumerator KickRoutine()
     {
         isKicking = true;
+        isAttacking = true;
+
         state = MovementState.Kick;
         anim.SetInteger("State", (int)state);
+
         yield return new WaitForSeconds(0.7f);
+
         isKicking = false;
+        isAttacking = false;
     }
-    IEnumerator CrouchKickRoutin()
+
+    IEnumerator CrouchKickRoutine()
     {
         isCrouchKicking = true;
+        isAttacking = true;
+
         state = MovementState.Crouch_Kick;
         anim.SetInteger("State", (int)state);
+
         yield return new WaitForSeconds(0.85f);
+
         isCrouchKicking = false;
+        isAttacking = false;
     }
 
     IEnumerator FlyingKickRoutine()
     {
         isFlyingKicking = true;
+        isAttacking = true;
+
         state = MovementState.Flying_Kick;
         anim.SetInteger("State", (int)state);
-        yield return null;
+
+        yield return new WaitUntil(() => IsGrounded());
+
+        isFlyingKicking = false;
+        isAttacking = false;
     }
 
     void UpdateAnimationState()
     {
-        if (isFlyingKicking && IsGrounded())
-        {
-            isFlyingKicking = false;
-        }
+        if (isFlyingKicking || isPunching || isKicking || isCrouchKicking)
+            return;
 
-        if (isPunching) return;
-
-        if (isKicking) return;
-
-        if (isCrouchKicking) return;
-
-        else if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.LeftControl))
         {
             state = MovementState.Crouch;
         }
-        //else if (Input.GetKey(KeyCode.R) && !IsGrounded())
-        //{
-        //    state = MovementState.Flying_Kick;
-        //}
         else if (rb.velocity.y > 0.1f)
         {
             state = MovementState.Jump;
@@ -135,7 +150,7 @@ public class MovementScript : MonoBehaviour
         {
             state = MovementState.Fall;
         }
-        else if (rb.velocity.x != 0)
+        else if (Mathf.Abs(rb.velocity.x) > 0.1f)
         {
             state = MovementState.Walk;
         }
@@ -150,8 +165,6 @@ public class MovementScript : MonoBehaviour
         {
             sprite.flipX = rb.velocity.x < 0;
         }
-
-        Debug.Log("Current State: " + state);
     }
 
     void Jump()
@@ -162,6 +175,6 @@ public class MovementScript : MonoBehaviour
     bool IsGrounded()
     {
         float extraHeight = 0.8f;
-        return Physics2D.BoxCast(boxcol.bounds.center, boxcol.bounds.size, 0, Vector2.down, extraHeight, groundLayer);
+        return Physics2D.BoxCast(boxcol.bounds.center, boxcol.bounds.size, 0f, Vector2.down, extraHeight, groundLayer);
     }
 }
